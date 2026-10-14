@@ -95,13 +95,13 @@ footer{text-align:center;color:#aaa;font-size:12px;padding:20px;}
       <span class="cnt" id="cnt"></span>
     </div>
     <div class="crow" data-group="status"><span class="lbl">상태</span>
-      <button class="chip active" data-val="all">전체</button><button class="chip" data-val="live">Live</button><button class="chip" data-val="gone">Discontinued</button><button class="chip" data-val="recent">9/11 이후 내려간 것</button>
+      <button class="chip active" data-val="all">전체</button><button class="chip" data-val="live">Live</button><button class="chip" data-val="gone">Discontinued</button><button class="chip" data-val="recent" title="9/11 조사 때는 판매중이었는데 그 이후 조사에서 내려간 것을 확인한 스타일 (내려간 시점을 구간으로 알 수 있는 것들)">9/11 이후 새로 내려감 <b>6</b></button>
     </div>
     <div class="crow" data-group="set"><span class="lbl">입고 SET</span><button class='chip active' data-val='all'>전체 SET</button><button class='chip' data-val='1.1'>1.1 <b>2</b></button><button class='chip' data-val='2.1'>2.1 <b>16</b></button><button class='chip' data-val='3.1'>3.1 <b>10</b></button><button class='chip' data-val='4.1'>4.1 <b>1</b></button><button class='chip' data-val='5.1'>5.1 <b>7</b></button><button class='chip' data-val='6.1'>6.1 <b>7</b></button><button class='chip' data-val='7.1'>7.1 <b>5</b></button><button class='chip' data-val='8.1'>8.1 <b>1</b></button><button class='chip' data-val='9.1'>9.1 <b>15</b></button><button class='chip' data-val='10.1'>10.1 <b>1</b></button><button class='chip' data-val='CF'>CF <b>2</b></button><button class='chip' data-val='LATE'>LATE ADDED <b>18</b></button><button class='chip' data-val='NEW'>엑셀 외 추가 <b>8</b></button></div>
     <div class="crow" data-group="section"><span class="lbl">섹션</span><button class='chip active' data-val='all'>전체</button><button class='chip' data-val='TOPS'>TOPS <b>54</b></button><button class='chip' data-val='BOTTOMS'>BOTTOMS <b>6</b></button><button class='chip' data-val='DRESS'>DRESS <b>6</b></button><button class='chip' data-val='NON-CAD'>NON-CAD <b>27</b></button></div>
     <div class="crow" data-group="round"><span class="lbl">라운드</span><button class='chip active' data-val='all'>전체</button><button class='chip' data-val='C1'>C1 <b>31</b></button><button class='chip' data-val='C2'>C2 <b>25</b></button><button class='chip' data-val='C3'>C3 <b>45</b></button>
       <span class="lbl" style="margin-left:18px;width:auto">정렬</span>
-      <select id="sort"><option value="start">입고 빠른순</option><option value="startd">입고 늦은순</option><option value="status">상태(Live 먼저)</option><option value="name">이름순</option></select>
+      <select id="sort"><option value="status" selected>판매중 먼저</option><option value="start">입고 빠른순</option><option value="startd">입고 늦은순</option><option value="name">이름순</option></select>
     </div>
   </div>
 
@@ -914,8 +914,7 @@ footer{text-align:center;color:#aaa;font-size:12px;padding:20px;}
     });
   });
   document.getElementById('q').addEventListener('input', function(e){ state.q = e.target.value.trim().toLowerCase(); apply(); });
-  document.getElementById('sort').addEventListener('change', function(e){
-    var v = e.target.value;
+  function sortRows(v){
     var cmp = {
       start: function(a,b){ return (+a.dataset.start) - (+b.dataset.start); },
       startd: function(a,b){ return (+b.dataset.start) - (+a.dataset.start); },
@@ -923,7 +922,9 @@ footer{text-align:center;color:#aaa;font-size:12px;padding:20px;}
       name: function(a,b){ return a.querySelector('.nm').textContent.localeCompare(b.querySelector('.nm').textContent); }
     }[v];
     rows.sort(cmp).forEach(function(r){ holder.appendChild(r); });
-  });
+  }
+  document.getElementById('sort').addEventListener('change', function(e){ sortRows(e.target.value); });
+  sortRows('status');
   apply();
 })();
 </script>
